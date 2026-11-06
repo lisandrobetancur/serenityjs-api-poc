@@ -1,7 +1,7 @@
 {
   "name": "serenityjs-api-poc",
   "version": "1.0.0",
-  "description": "Proof of concept for API testing with Serenity/JS, the Screenplay Pattern and Cucumber",
+  "description": "API test suite for the Prop Room API with Serenity/JS, the Screenplay Pattern and Cucumber",
   "private": true,
   "type": "commonjs",
   "license": "MIT",
@@ -11,10 +11,13 @@
   "scripts": {
     "clean": "rm -rf target",
     "test": "cucumber-js",
+    "test:smoke": "cucumber-js --tags @smoke",
+    "test:fast": "cucumber-js --tags \"not @slow\"",
     "test:tags": "cucumber-js --tags",
     "test:report": "npm run clean && (npm test || true) && npm run report",
     "report": "serenity-bdd run --features ./features",
     "serenity:update": "serenity-bdd update",
+    "generate:types": "npx --yes openapi-typescript@7.13.0 ${API_BASE_URL:-http://localhost:8000}/openapi.json --default-non-nullable false -o src/api/schema.d.ts",
     "lint:types": "tsc --noEmit"
   },
   "devDependencies": {

@@ -1,0 +1,51 @@
+name: API tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  api-tests:
+    runs-on: ubuntu-latest
+    services:
+      api:
+        image: ghcr.io/lisandrobetancur/prop-room-api:latest
+        ports:
+          - 8000:8000
+    env:
+      API_BASE_URL: http://localhost:8000
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - run: npm ci
+
+      - name: Wait for the API
+        run: timeout 60 bash -c 'until curl -fsS "$API_BASE_URL/health"; do sleep 1; done'
+
+      - run: npm run lint:types
+
+      - name: Run the scenarios
+        run: npm test
+
+      - name: Generate the Serenity BDD report
+        if: always()
+        run: npm run serenity:update && npm run report
+
+      - name: Upload the report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: serenity-report
+          path: target/site/serenity

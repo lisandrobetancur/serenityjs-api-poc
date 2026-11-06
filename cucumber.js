@@ -2,7 +2,6 @@
 // https://serenity-js.org/handbook/test-runners/cucumber/
 module.exports = {
     default: {
-        paths: ['features/**/*.feature'],
         requireModule: ['tsx/cjs'],
         require: [
             'features/support/**/*.ts',

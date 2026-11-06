@@ -10,6 +10,7 @@ if (existsSync('.env')) {
  * Values can be overridden with environment variables or in a `.env` file.
  */
 export const environment = {
-    apiBaseUrl: process.env.API_BASE_URL ?? 'https://jsonplaceholder.typicode.com',
+    apiBaseUrl: process.env.API_BASE_URL ?? 'http://localhost:8000',
+    apiKey: process.env.API_KEY ?? 'test-api-key-123',
     requestTimeout: Number(process.env.API_TIMEOUT_MS ?? 10_000),
 };
