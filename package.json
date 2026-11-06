@@ -1,0 +1,32 @@
+{
+  "name": "serenityjs-api-poc",
+  "version": "1.0.0",
+  "description": "Proof of concept de pruebas de API con Serenity/JS y el patrón Screenplay",
+  "private": true,
+  "type": "commonjs",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "clean": "rm -rf target",
+    "test": "cucumber-js",
+    "test:tags": "cucumber-js --tags",
+    "test:report": "npm run clean && (npm test || true) && npm run report",
+    "report": "serenity-bdd run --features ./features",
+    "serenity:update": "serenity-bdd update",
+    "lint:types": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@cucumber/cucumber": "^13.3.0",
+    "@serenity-js/assertions": "^3.49.0",
+    "@serenity-js/console-reporter": "^3.49.0",
+    "@serenity-js/core": "^3.49.0",
+    "@serenity-js/cucumber": "^3.49.0",
+    "@serenity-js/rest": "^3.49.0",
+    "@serenity-js/serenity-bdd": "^3.49.0",
+    "@types/node": "^26.6.6",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2"
+  }
+}
