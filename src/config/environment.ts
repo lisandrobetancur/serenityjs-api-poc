@@ -1,13 +1,13 @@
 import { existsSync } from 'node:fs';
 
-// Carga variables desde .env si existe (soporte nativo de Node.js >= 20.12)
+// Load variables from .env when present (native support in Node.js >= 20.12)
 if (existsSync('.env')) {
     process.loadEnvFile('.env');
 }
 
 /**
- * Configuración del entorno bajo prueba.
- * Los valores se pueden sobreescribir con variables de entorno o en un archivo `.env`.
+ * Configuration of the system under test.
+ * Values can be overridden with environment variables or in a `.env` file.
  */
 export const environment = {
     apiBaseUrl: process.env.API_BASE_URL ?? 'https://jsonplaceholder.typicode.com',

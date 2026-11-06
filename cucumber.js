@@ -1,4 +1,4 @@
-// Configuración de Cucumber.js + Serenity/JS
+// Cucumber.js + Serenity/JS configuration
 // https://serenity-js.org/handbook/test-runners/cucumber/
 module.exports = {
     default: {
@@ -12,6 +12,5 @@ module.exports = {
         formatOptions: {
             specDirectory: 'features',
         },
-        language: 'es',
     },
 };

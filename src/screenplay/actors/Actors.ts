@@ -4,8 +4,8 @@ import { CallAnApi } from '@serenity-js/rest';
 import { environment } from '../../config/environment';
 
 /**
- * El elenco (Cast) define qué habilidades (Abilities) recibe cada actor.
- * Todos los actores pueden llamar a la API y tomar notas para compartir datos entre pasos.
+ * The Cast defines which Abilities each actor receives.
+ * Every actor can call the API and take notes to share data between steps.
  */
 export class Actors implements Cast {
     constructor(private readonly apiBaseUrl: string = environment.apiBaseUrl) {}

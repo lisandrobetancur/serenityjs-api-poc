@@ -2,19 +2,19 @@ import { defineParameterType } from '@cucumber/cucumber';
 import { actorCalled, actorInTheSpotlight } from '@serenity-js/core';
 
 /**
- * {actor}: convierte un nombre propio del escenario (p. ej. "Ana") en un Actor de Serenity/JS.
+ * {actor}: turns a proper name used in a scenario (e.g. "Ana") into a Serenity/JS Actor.
  */
 defineParameterType({
     name: 'actor',
-    regexp: /[A-ZÁÉÍÓÚÑ][a-záéíóúñ]+/,
+    regexp: /[A-Z][a-z]+/,
     transformer: (name: string) => actorCalled(name),
 });
 
 /**
- * {pronoun}: hace referencia al último actor que intervino en el escenario.
+ * {pronoun}: refers to the actor who most recently took part in the scenario.
  */
 defineParameterType({
     name: 'pronoun',
-    regexp: /él|ella|el actor|la actriz/,
+    regexp: /he|she|they/,
     transformer: () => actorInTheSpotlight(),
 });

@@ -4,8 +4,8 @@ import { LastResponse } from '@serenity-js/rest';
 import { Post } from '../models/Post';
 
 /**
- * Preguntas (Questions) que permiten al actor consultar el estado del sistema
- * a partir de la última respuesta recibida.
+ * Questions that let the actor inspect the state of the system
+ * based on the last response received.
  */
 export class PostResponse {
     static post = () =>

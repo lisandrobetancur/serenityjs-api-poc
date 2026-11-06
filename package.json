@@ -1,7 +1,7 @@
 {
   "name": "serenityjs-api-poc",
   "version": "1.0.0",
-  "description": "Proof of concept de pruebas de API con Serenity/JS y el patrón Screenplay",
+  "description": "Proof of concept for API testing with Serenity/JS, the Screenplay Pattern and Cucumber",
   "private": true,
   "type": "commonjs",
   "license": "MIT",

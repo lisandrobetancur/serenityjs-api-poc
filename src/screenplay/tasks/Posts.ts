@@ -4,8 +4,8 @@ import { DeleteRequest, GetRequest, PostRequest, Send } from '@serenity-js/rest'
 import { NewPost } from '../models/Post';
 
 /**
- * Tareas (Tasks) de negocio sobre el recurso /posts.
- * Cada tarea describe QUÉ quiere lograr el actor, no CÓMO se hace la petición HTTP.
+ * Business-level Tasks for the /posts resource.
+ * Each task describes WHAT the actor wants to achieve, not HOW the HTTP request is made.
  */
 export class Posts {
     static fetchAll = () =>

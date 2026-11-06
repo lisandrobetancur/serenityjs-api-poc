@@ -1,62 +1,62 @@
 # serenityjs-api-poc
 
-Proof of concept de pruebas de API REST con [Serenity/JS](https://serenity-js.org), el **patrón Screenplay**, **Cucumber** y **Gherkin** (en español), escrito en TypeScript.
+Proof of concept for REST API testing with [Serenity/JS](https://serenity-js.org), the **Screenplay Pattern**, **Cucumber** and **Gherkin**, written in TypeScript.
 
-La API de ejemplo es [JSONPlaceholder](https://jsonplaceholder.typicode.com).
+The example API under test is [JSONPlaceholder](https://jsonplaceholder.typicode.com).
 
-## Requisitos
+## Requirements
 
-- Node.js >= 20.12 (probado con Node 24)
-- Java 17+ (solo para generar el reporte HTML de Serenity BDD)
+- Node.js >= 20.12 (tested with Node 24)
+- Java 17+ (only needed to generate the Serenity BDD HTML report)
 
-## Instalación
+## Installation
 
 ```bash
 npm install
-cp .env.example .env   # opcional
+cp .env.example .env   # optional
 ```
 
-## Comandos
+## Commands
 
-| Comando | Descripción |
+| Command | Description |
 | --- | --- |
-| `npm test` | Ejecuta todos los escenarios de Cucumber |
-| `npm run test:tags -- "@smoke"` | Ejecuta los escenarios con una etiqueta |
-| `npm run lint:types` | Verifica los tipos con TypeScript |
-| `npm run serenity:update` | Descarga el CLI de Serenity BDD (una sola vez) |
-| `npm run test:report` | Ejecuta las pruebas y genera el reporte HTML en `target/site/serenity` |
+| `npm test` | Run all Cucumber scenarios |
+| `npm run test:tags -- "@smoke"` | Run the scenarios matching a tag expression |
+| `npm run lint:types` | Type-check the project with TypeScript |
+| `npm run serenity:update` | Download the Serenity BDD CLI (once) |
+| `npm run test:report` | Run the tests and generate the HTML report in `target/site/serenity` |
 
-## Estructura
+## Project structure
 
 ```
-features/                      # Capa Gherkin (QUÉ se prueba)
-├── posts/*.feature            # Escenarios en español (# language: es)
-├── step-definitions/          # Traducen Gherkin a Tasks/Questions
+features/                      # Gherkin layer (WHAT is tested)
+├── posts/*.feature            # Scenarios
+├── step-definitions/          # Translate Gherkin into Tasks and Questions
 └── support/
-    ├── serenity.config.ts     # Actores, reporters y timeouts
-    └── parameter-types.ts     # {actor} y {pronoun}
+    ├── serenity.config.ts     # Actors, reporters and timeouts
+    └── parameter-types.ts     # {actor} and {pronoun}
 src/
-├── config/environment.ts      # URL base y timeouts (variables de entorno)
-└── screenplay/                # Capa Screenplay (CÓMO se prueba)
-    ├── actors/Actors.ts       # Cast: habilidades de cada actor (CallAnApi, TakeNotes)
-    ├── tasks/                 # Tareas de negocio (Posts.create, Posts.fetchById…)
-    ├── questions/             # Preguntas sobre la respuesta (PostResponse.post…)
-    └── models/                # Tipos de los recursos de la API
+├── config/environment.ts      # Base URL and timeouts (environment variables)
+└── screenplay/                # Screenplay layer (HOW it is tested)
+    ├── actors/Actors.ts       # Cast: the abilities of each actor (CallAnApi, TakeNotes)
+    ├── tasks/                 # Business tasks (Posts.create, Posts.fetchById…)
+    ├── questions/             # Questions about the response (PostResponse.post…)
+    └── models/                # Types of the API resources
 ```
 
-## Patrón Screenplay en este proyecto
+## The Screenplay Pattern in this project
 
-- **Actor** — quien interactúa con el sistema (`Ana`, `Bruno` en los escenarios).
-- **Ability** — lo que el actor *puede* hacer: `CallAnApi` (HTTP) y `TakeNotes`.
-- **Interaction** — acciones de bajo nivel: `Send.a(GetRequest.to(...))`.
-- **Task** — agrupan interacciones con significado de negocio: `Posts.create(post)`.
-- **Question** — consultan el estado del sistema: `LastResponse.status()`, `PostResponse.post()`.
+- **Actor**: who interacts with the system (`Ana` and `Bruno` in the scenarios).
+- **Ability**: what the actor *can* do, here `CallAnApi` (HTTP) and `TakeNotes`.
+- **Interaction**: low-level actions such as `Send.a(GetRequest.to(...))`.
+- **Task**: groups interactions into business-meaningful activities such as `Posts.create(post)`.
+- **Question**: retrieves the state of the system, e.g. `LastResponse.status()` or `PostResponse.post()`.
 
-Los step definitions solo conectan Gherkin con Tasks y Questions; la lógica reutilizable vive en `src/screenplay`.
+Step definitions only connect Gherkin with Tasks and Questions; the reusable logic lives in `src/screenplay`.
 
-## Variables de entorno
+## Environment variables
 
-| Variable | Por defecto |
+| Variable | Default |
 | --- | --- |
 | `API_BASE_URL` | `https://jsonplaceholder.typicode.com` |
 | `API_TIMEOUT_MS` | `10000` |
