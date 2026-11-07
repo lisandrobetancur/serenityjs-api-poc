@@ -4,13 +4,14 @@ Feature: Suppliers
   I want to maintain the list of suppliers
   So that purchase orders go to the right companies
 
-  @smoke
+  @smoke @catalog_10
   Scenario: Anyone can list the suppliers, two per page by default
     When Gus the guest lists the suppliers
     Then he should receive a 200 response
     And the response field "limit" should be 2
     And the "name" of the entries in "items" should be "Acme Stage Supply,Northwind Textiles"
 
+  @catalog_11
   Scenario: Paginating suppliers with a cursor
     When Gus lists the suppliers 2 at a time
     Then he should receive a 200 response
@@ -22,22 +23,26 @@ Feature: Suppliers
     And the "name" of the entries in "items" should be "Lumen Lighting Co."
     And the response field "next_cursor" should be null
 
+  @catalog_12
   Scenario: An invalid cursor is a bad request
     When Gus lists the suppliers from the cursor "not-a-cursor"
     Then he should receive a 400 response
     And the error should say "Invalid cursor"
 
+  @catalog_13
   Scenario: Filtering suppliers by country
     When Gus lists the suppliers from "UK"
     Then he should receive a 200 response
     And the "name" of the entries in "items" should be "Northwind Textiles"
 
+  @catalog_14
   Scenario: Creating a supplier with the API key
     When Gus creates the supplier "Gilded Frames Ltd" with a valid API key
     Then he should receive a 201 response
     And the response should include the "Location" header
     And the response field "name" should be "Gilded Frames Ltd"
 
+  @catalog_15
   Scenario Outline: Supplier writes require a valid API key
     When Gus creates the supplier "Gilded Frames Ltd" with <key>
     Then he should receive a 401 response
@@ -48,6 +53,7 @@ Feature: Suppliers
       | no API key               |
       | the API key "wrong-key"  |
 
+  @catalog_16
   Scenario: Replacing a supplier
     When Gus replaces supplier 2 with the name "Northwind Fabrics" from "Ireland"
     Then he should receive a 200 response
@@ -55,17 +61,20 @@ Feature: Suppliers
       | name    | Northwind Fabrics |
       | country | Ireland           |
 
+  @catalog_17
   Scenario: Partially updating a supplier
     When Gus changes the phone of supplier 3 to "+49-30-5550-0199"
     Then he should receive a 200 response
     And the response field "phone" should be "+49-30-5550-0199"
     And the response field "name" should be "Lumen Lighting Co."
 
+  @catalog_18
   Scenario: A supplier referenced by products cannot be deleted
     When Gus deletes supplier 1
     Then he should receive a 409 response
     And the error should say "is referenced by products or purchase orders"
 
+  @catalog_19
   Scenario: Deleting an unused supplier
     Given Gus has created the supplier "Short-lived Supply" with a valid API key
     When he deletes the supplier he created

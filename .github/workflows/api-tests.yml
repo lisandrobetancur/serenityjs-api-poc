@@ -2,7 +2,7 @@ name: API tests
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
   workflow_dispatch:
 
@@ -14,8 +14,21 @@ jobs:
         image: ghcr.io/lisandrobetancur/prop-room-api:latest
         ports:
           - 8000:8000
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres" --health-interval 2s --health-retries 30
     env:
       API_BASE_URL: http://localhost:8000
+      DB_HOST: localhost
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      CI: 'true'
     steps:
       - uses: actions/checkout@v4
 
@@ -31,21 +44,38 @@ jobs:
 
       - run: npm ci
 
+      - name: Lint and format check
+        run: npm run lint
+
       - name: Wait for the API
         run: timeout 60 bash -c 'until curl -fsS "$API_BASE_URL/health"; do sleep 1; done'
 
-      - run: npm run lint:types
+      - name: Create the example database
+        run: npm run db:setup
 
+      - name: Download the Serenity BDD CLI
+        run: npm run serenity:update
+
+      # npm test runs the pretest checks, the scenarios, the HTML report, the summary and the run results.
+      # LocalStack is not started here, so the @localstack scenarios are reported as skipped.
       - name: Run the scenarios
         run: npm test
 
-      - name: Generate the Serenity BDD report
+      - name: Publish the run summary
         if: always()
-        run: npm run serenity:update && npm run report
+        run: |
+          if [ -f target/scenario-summary.env ]; then
+            { echo '### Scenario summary'; echo '```'; cat target/scenario-summary.env; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+          fi
 
-      - name: Upload the report
+      - name: Upload the report and results
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: serenity-report
-          path: target/site/serenity
+          path: |
+            target/site/serenity
+            target/run-results.json
+            target/scenario-summary.env
+            target/gateway-failures.tsv
+            target/logs

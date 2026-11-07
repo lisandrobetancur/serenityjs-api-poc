@@ -9,8 +9,7 @@ export function parseLiteral(text: string): unknown {
     }
     try {
         return JSON.parse(trimmed);
-    }
-    catch {
+    } catch {
         return trimmed;
     }
 }
@@ -21,7 +20,7 @@ export function parseLiteral(text: string): unknown {
  */
 export function objectFrom(rows: Record<string, string>): Record<string, unknown> {
     const result: Record<string, unknown> = {};
-    for (const [ key, raw ] of Object.entries(rows)) {
+    for (const [key, raw] of Object.entries(rows)) {
         if (raw === '') {
             continue;
         }
@@ -39,5 +38,5 @@ export function objectFrom(rows: Record<string, string>): Record<string, unknown
  * A unique-enough suffix so that scenarios which create data never collide.
  */
 export function uniqueSuffix(): string {
-    return `${ Date.now().toString(36) }${ Math.floor(Math.random() * 1_000).toString(36) }`.toUpperCase();
+    return `${Date.now().toString(36)}${Math.floor(Math.random() * 1_000).toString(36)}`.toUpperCase();
 }

@@ -1,0 +1,6 @@
+node_modules
+target
+package-lock.json
+src/models/schema.d.ts
+*.feature
+*.xlsx

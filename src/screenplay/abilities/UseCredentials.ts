@@ -1,4 +1,4 @@
-import { Ability, Masked, Question, UsesAbilities } from '@serenity-js/core';
+import { Ability, Masked, Question, type UsesAbilities } from '@serenity-js/core';
 
 import type { Persona } from '../actors/Personas';
 
@@ -16,20 +16,21 @@ export class UseCredentials extends Ability {
     }
 
     static email = () =>
-        Question.about('the email of the actor', (actor: UsesAbilities) =>
-            UseCredentials.as(actor).persona.email);
+        Question.about('the email of the actor', (actor: UsesAbilities) => UseCredentials.as(actor).persona.email);
 
     static password = () =>
         Masked.valueOf(
-            Question.about('the password of the actor', (actor: UsesAbilities) =>
-                UseCredentials.as(actor).persona.password),
+            Question.about(
+                'the password of the actor',
+                (actor: UsesAbilities) => UseCredentials.as(actor).persona.password,
+            ),
         );
 
     static basicAuthHeader = () =>
         Masked.valueOf(
             Question.about('the Basic authorization header of the actor', (actor: UsesAbilities) => {
                 const { email, password } = UseCredentials.as(actor).persona;
-                return `Basic ${ Buffer.from(`${ email }:${ password }`).toString('base64') }`;
+                return `Basic ${Buffer.from(`${email}:${password}`).toString('base64')}`;
             }),
         );
 }

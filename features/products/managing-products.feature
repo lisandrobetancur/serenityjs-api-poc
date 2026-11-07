@@ -4,7 +4,7 @@ Feature: Managing products
   I want to create, update and retire products
   So that the catalogue reflects what the theatre owns
 
-  @smoke
+  @smoke @products_14
   Scenario: The admin creates a product
     Given Ada the admin is logged in
     When she creates a product with:
@@ -26,6 +26,7 @@ Feature: Managing products
       | total_stock         | 0             |
       | dimensions.width_cm | 20.0          |
 
+  @products_15
   Scenario Outline: Only admins can create products
     Given <persona> is logged in
     When <persona> creates a product with:
@@ -41,6 +42,7 @@ Feature: Managing products
       | Carl the clerk  |
       | Vera the viewer |
 
+  @products_16
   Scenario: Anonymous callers cannot create products
     When Gus the guest creates a product with:
       | sku         | NEW-CROWN-003 |
@@ -49,6 +51,7 @@ Feature: Managing products
       | unit_price  | 12.5          |
     Then he should receive a 401 response
 
+  @products_17
   Scenario: A duplicate SKU is rejected
     Given Ada the admin is logged in
     When she creates a product with:
@@ -58,6 +61,7 @@ Feature: Managing products
       | unit_price  | 10            |
     Then she should receive a 409 response
 
+  @products_18
   Scenario Outline: Invalid products are rejected
     Given Ada the admin is logged in
     When she creates a product with:
@@ -74,6 +78,7 @@ Feature: Managing products
       | NEW-OK-001 |       | 10         | name       |
       | NEW-OK-002 | Prop  | -1         | unit_price |
 
+  @products_19
   Scenario: Referencing a category that does not exist is rejected
     Given Ada the admin is logged in
     When she creates a product with:
@@ -83,6 +88,7 @@ Feature: Managing products
       | unit_price  | 10             |
     Then she should receive a 422 response
 
+  @products_20
   Scenario: The admin replaces a product with a matching ETag
     Given Ada the admin is logged in
     And she has fetched product 2 and remembered its ETag
@@ -95,6 +101,7 @@ Feature: Managing products
     And the response field "name" should be "Heavy folding table"
     And the "ETag" header should be "\"product-2-v2\""
 
+  @products_21
   Scenario: A replacement with a stale ETag is rejected
     Given Ada the admin is logged in
     When she replaces product 2 using the ETag "\"product-2-v0\"" with:
@@ -104,6 +111,7 @@ Feature: Managing products
       | unit_price  | 1             |
     Then she should receive a 412 response
 
+  @products_22
   Scenario: The admin partially updates a product
     Given Ada the admin is logged in
     When she changes the price of product 3 to 22.5
@@ -111,18 +119,21 @@ Feature: Managing products
     And the response field "unit_price" should be 22.5
     And the response field "sku" should be "LGT-LAMP-001"
 
+  @products_23
   Scenario: Partial updates accept JSON merge patch
     Given Ada the admin is logged in
     When she changes the price of product 3 to 19.99 using a merge patch
     Then she should receive a 200 response
     And the response field "unit_price" should be 19.99
 
+  @products_24
   Scenario: A partial update with a stale ETag is rejected
     Given Ada the admin is logged in
     When she changes the price of product 3 to 1 using the ETag "\"product-3-v0\""
     Then she should receive a 412 response
     And the error should say "If-Match does not match"
 
+  @products_25
   Scenario: The admin deletes a product without history
     Given Ada the admin is logged in
     When she deletes product 7
@@ -130,6 +141,7 @@ Feature: Managing products
     When she fetches product 7
     Then she should receive a 404 response
 
+  @products_26
   Scenario: A product with stock history cannot be deleted
     Given Ada the admin is logged in
     When she deletes product 1

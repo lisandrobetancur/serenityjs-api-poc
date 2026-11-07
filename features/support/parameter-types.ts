@@ -11,9 +11,7 @@ defineParameterType({
     name: 'actor',
     regexp: /[A-Z][a-z]+(?: the (?:admin|clerk|viewer|guest))?|he|she|they/,
     transformer: (text: string) =>
-        [ 'he', 'she', 'they' ].includes(text)
-            ? actorInTheSpotlight()
-            : actorCalled(text.split(' ')[0]),
+        ['he', 'she', 'they'].includes(text) ? actorInTheSpotlight() : actorCalled(text.split(' ')[0] ?? text),
 });
 
 /**

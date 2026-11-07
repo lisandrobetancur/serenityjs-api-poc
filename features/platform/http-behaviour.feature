@@ -4,6 +4,7 @@ Feature: HTTP behaviour
   I want the API to follow HTTP semantics consistently
   So that generic HTTP tooling works with it out of the box
 
+  @platform_01
   Scenario Outline: The echo endpoint reflects any method
     When Gus sends a <method> request to the echo endpoint
     Then he should receive a 200 response
@@ -17,6 +18,7 @@ Feature: HTTP behaviour
       | PATCH  |
       | DELETE |
 
+  @platform_02
   Scenario: The echo endpoint reflects query parameters, headers and the JSON body
     When Gus echoes the JSON body {"prop": "skull", "act": 5} with the header "X-Scene" set to "graveyard" and the query "lang=en"
     Then he should receive a 200 response
@@ -26,6 +28,7 @@ Feature: HTTP behaviour
       | headers.x-scene | graveyard |
       | query.lang      | en        |
 
+  @platform_03
   Scenario Outline: Redirects are answered with the right status and location
     When Gus sends <method> "<path>" without following redirects
     Then he should receive a <status> response
@@ -39,6 +42,7 @@ Feature: HTTP behaviour
       | POST   | /redirect/307?to=/echo    | 307    | /echo                |
       | PUT    | /redirect/308?to=/echo    | 308    | /echo                |
 
+  @platform_04
   Scenario: A 307 redirect keeps the method and body
     When Gus sends POST "/redirect/307?to=/echo" with the body {"cue": 12} following redirects
     Then he should receive a 200 response
@@ -46,34 +50,40 @@ Feature: HTTP behaviour
       | method   | POST |
       | body.cue | 12   |
 
+  @platform_05
   Scenario: A 303 redirect switches to GET
     When Gus sends POST "/redirect/303?to=/echo" with the body {"cue": 12} following redirects
     Then he should receive a 200 response
     And the response field "method" should be "GET"
 
+  @platform_06
   Scenario: OPTIONS lists the allowed methods
     When Gus asks which methods "/products" allows
     Then he should receive a 204 response
     And the "Allow" header should contain "GET"
     And the "Allow" header should contain "POST"
 
+  @platform_07
   Scenario: An unsupported method is refused
     When Gus sends PUT "/health"
     Then he should receive a 405 response
 
+  @platform_08
   Scenario: Malformed JSON is a bad request
     Given Ada the admin is logged in
     When she sends the raw body "{bad json" as "application/json" to POST "/categories"
     Then she should receive a 400 response
     And the error should say "not valid JSON"
 
+  @platform_09
   Scenario: A JSON endpoint refuses other content types
     Given Ada the admin is logged in
     When she sends the raw body "name=Masks" as "text/plain" to POST "/categories"
     Then she should receive a 415 response
     And the error should say "use application/json"
 
-  Scenario Outline: The chaos endpoint answers with any status code
+  @fast_retries @platform_10
+  Scenario Outline: The chaos endpoint answers with any status code (a persistent 502 is retried, then reported)
     When Gus asks the chaos endpoint for a <status>
     Then he should receive a <status> response
 
@@ -85,43 +95,51 @@ Feature: HTTP behaviour
       | 502    |
       | 503    |
 
+  @platform_11
   Scenario: Throttling and unavailability responses suggest when to retry
     When Gus asks the chaos endpoint for a 503
     Then the response should include the "Retry-After" header
 
+  @platform_12
   Scenario: The chaos endpoint can add latency
     When Gus asks the chaos endpoint for a 200 after 300 ms
     Then he should receive a 200 response
     And the response field "delay_ms" should be 300
 
+  @platform_13
   Scenario: Unhandled exceptions return a generic 500
     When Gus triggers an unhandled exception
     Then he should receive a 500 response
     And the error should say "Internal server error"
 
+  @platform_14
   Scenario: The rate limit is announced in the response headers
     When Gus calls the rate-limited endpoint once as client "box-office"
     Then he should receive a 200 response
     And the "X-RateLimit-Limit" header should be "5"
     And the "X-RateLimit-Remaining" header should be "4"
 
+  @platform_15
   Scenario: Exceeding the rate limit is throttled
     When Gus calls the rate-limited endpoint 6 times as client "box-office"
     Then he should receive a 429 response
     And the response should include the "Retry-After" header
     And the "X-RateLimit-Remaining" header should be "0"
 
+  @platform_16
   Scenario: Rate limits are tracked per client
     Given Gus has called the rate-limited endpoint 6 times as client "box-office"
     When he calls the rate-limited endpoint once as client "stage-door"
     Then he should receive a 200 response
 
+  @platform_17
   Scenario: Preferences are stored in cookies
     When Gus saves the preferences language "es" and theme "dark"
     Then he should receive a 200 response
     And the "Set-Cookie" header should contain "language=es"
     And the "Set-Cookie" header should contain "theme=dark"
 
+  @platform_18
   Scenario: Preferences are read back from cookies
     When Gus reads his preferences with the cookies "language=pt; theme=dark"
     Then he should receive a 200 response
@@ -129,6 +147,7 @@ Feature: HTTP behaviour
       | language | pt   |
       | theme    | dark |
 
+  @platform_19
   Scenario: Unsupported preferences fall back to the defaults
     When Gus reads his preferences with the cookies "language=fr; theme=neon"
     Then he should receive a 200 response
@@ -136,6 +155,7 @@ Feature: HTTP behaviour
       | language | en    |
       | theme    | light |
 
+  @platform_20
   Scenario: Sending the contact form
     When Gus sends the contact form as "Ophelia" with the email "ophelia@elsinore.test" and the message "Need more flowers"
     Then he should receive a 201 response
@@ -143,6 +163,7 @@ Feature: HTTP behaviour
       | name    | Ophelia           |
       | message | Need more flowers |
 
+  @platform_21
   Scenario: The contact form validates its fields
     When Gus sends the contact form as "Ophelia" with the email "" and the message ""
     Then he should receive a 422 response

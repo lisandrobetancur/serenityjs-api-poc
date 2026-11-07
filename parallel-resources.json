@@ -1,0 +1,21 @@
+{
+  "$comment": [
+    "Maps a feature tag to the resource its scenarios need exclusively. Two scenarios that map to the same resource never run at the same time in the parallel profile.",
+    "Every Prop Room feature maps to 'prop-room-seed': each scenario resets the API's global seed data before it starts, so two of them running together would reset each other's data.",
+    "The framework demos use the per-worker fake API and the example database rows they own, so they get resources of their own and run in parallel with the rest.",
+    "A feature tag that is not listed is exclusive to itself: its scenarios never overlap with each other."
+  ],
+  "resources": {
+    "@auth": "prop-room-seed",
+    "@users": "prop-room-seed",
+    "@products": "prop-room-seed",
+    "@catalog": "prop-room-seed",
+    "@inventory": "prop-room-seed",
+    "@purchasing": "prop-room-seed",
+    "@reports": "prop-room-seed",
+    "@platform": "prop-room-seed",
+    "@framework": "framework-demo",
+    "@database": "orders-database",
+    "@localstack": "localstack-resources"
+  }
+}
